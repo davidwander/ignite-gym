@@ -1,9 +1,17 @@
-import { HStack, Heading, Text, VStack } from "@gluestack-ui/themed";
+import { HStack, Heading, Text, VStack, Icon } from "@gluestack-ui/themed";
+import { LogOut } from "lucide-react-native";
+
+import { UsePhoto } from "./UserPhoto";
 
 export function HomeHeader() {
   return (
-    <HStack bg="$gray600" pt="$16" pb="$5" px="$8" alignItems="center">
-      <VStack>
+    <HStack bg="$gray600" pt="$16" pb="$5" px="$8" alignItems="center" gap="$4">
+      <UsePhoto source={{ uri: "https://github.com/davidwander.png"}} 
+      w="$16"
+      h="$16"
+      alt="Imagem do usuário"
+    />
+      <VStack flex={1}>
         <Text color="$gray100" fontSize="$sm">
           Olá,
         </Text>
@@ -11,6 +19,8 @@ export function HomeHeader() {
           David Wander
         </Heading>
       </VStack>
+
+      <Icon as={LogOut} color="$gray200" size="xl" />
     </HStack>
   )
 }
