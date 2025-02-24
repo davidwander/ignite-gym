@@ -3,7 +3,7 @@ import { Image } from "@gluestack-ui/themed";
 
 type Props = ComponentProps<typeof Image>
 
-export function UsePhoto({ ...rest}: Props) {
+export function UserPhoto({ ...rest}: Props) {
   return (
     <Image 
       rounded="$full"
