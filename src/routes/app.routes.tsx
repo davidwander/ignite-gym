@@ -1,5 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationProp } from "@react-navigation/native";
+
 import { gluestackUIConfig } from "../../config/gluestack-ui.config";
 import { Platform } from "react-native";
 
@@ -12,16 +14,20 @@ import HomeSvg from "@assets/home.svg";
 import HistorySvg from "@assets/history.svg";
 import ProfileSvg from "@assets/profile.svg";
 
-type TabRoutes = {
+// Definição dos tipos de rotas
+export type TabRoutes = {
   home: undefined;
   history: undefined;
   profile: undefined;
 };
 
-type StackRoutes = {
+export type StackRoutes = {
   Tabs: undefined;
   Exercise: undefined;
 };
+
+// Corrigindo a exportação do tipo de navegação para `useNavigation`
+export type AppNavigatorRoutesProps = NavigationProp<StackRoutes>;
 
 const Tab = createBottomTabNavigator<TabRoutes>();
 const Stack = createStackNavigator<StackRoutes>();
@@ -51,10 +57,10 @@ function TabRoutes() {
         component={Home}
         options={{
           tabBarIcon: ({ color }) => (
-            <HomeSvg 
-              fill={color} 
-              width={iconSize} 
-              height={iconSize} 
+            <HomeSvg
+              fill={color}
+              width={iconSize}
+              height={iconSize}
               style={{ marginBottom: 24 }}
             />
           ),
@@ -65,11 +71,11 @@ function TabRoutes() {
         component={History}
         options={{
           tabBarIcon: ({ color }) => (
-            <HistorySvg 
-              fill={color} 
-              width={iconSize} 
+            <HistorySvg
+              fill={color}
+              width={iconSize}
               height={iconSize}
-              style={{ marginBottom: 24 }} 
+              style={{ marginBottom: 24 }}
             />
           ),
         }}
@@ -79,10 +85,10 @@ function TabRoutes() {
         component={Profile}
         options={{
           tabBarIcon: ({ color }) => (
-            <ProfileSvg 
-              fill={color} 
-              width={iconSize} 
-              height={iconSize} 
+            <ProfileSvg
+              fill={color}
+              width={iconSize}
+              height={iconSize}
               style={{ marginBottom: 24 }}
             />
           ),
