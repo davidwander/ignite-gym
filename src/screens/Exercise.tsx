@@ -1,5 +1,12 @@
 import { TouchableOpacity } from "react-native";
-import { VStack, Icon, HStack, Heading, Text } from "@gluestack-ui/themed";
+import { 
+  VStack, 
+  Icon, 
+  HStack, 
+  Heading, 
+  Text, 
+  Image 
+} from "@gluestack-ui/themed";
 import { ArrowLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -43,6 +50,20 @@ export function Exercise() {
             </Text>
           </HStack>
         </HStack>
+      </VStack>
+
+      <VStack p="$8">
+        <Image 
+          source={{
+            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6cuJ-gLyS6R6KnDFWQI9TsWKYmvrDNWT3bw&s"
+          }}
+          alt="Ilustração do exercício."
+          mb="$3"
+          resizeMode="cover"
+          rounded="$lg"
+          w="$full"
+          h="$80"
+        />
       </VStack>
     </VStack>
   )
