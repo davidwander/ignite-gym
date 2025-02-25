@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { ScrollView, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, TouchableOpacity } from "react-native";
 import { Center, VStack, Text, Heading } from "@gluestack-ui/themed";
 import * as ImagePiker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
@@ -12,17 +13,34 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState("https://github.com/davidwander.png");
 
   async function handleUserPhotoSelect() {
-    const photoSelected = await ImagePiker.launchImageLibraryAsync({
-      mediaTypes: ImagePiker.MediaTypeOptions.Images,
-      quality: 1,
-      aspect: [4, 4],
-      allowsEditing: true,
-    });
-    
-    if(photoSelected.canceled) {
-      return
+    try{
+      const photoSelected = await ImagePiker.launchImageLibraryAsync({
+        mediaTypes: ImagePiker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+      
+      if(photoSelected.canceled) {
+        return
+      }
+
+      const photoURI = photoSelected.assets[0].uri
+
+      if (photoURI) {
+        const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
+          size: number
+        }
+
+        if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+          return Alert.alert("Essa foto é muito grande. Escolha uma de até 5MB.")
+        }
+
+        setUserPhoto(photoURI)
+      }
+    } catch (error) {
+      console.log(error)
     }
-    setUserPhoto(photoSelected.assets[0].uri)
   }
 
   return (
