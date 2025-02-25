@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "iginitegym",
-    "slug": "iginitegym",
+    "name": "ignitegym",
+    "slug": "ignitegym",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
-    ]
+      "expo-font",
+        [
+          "expo-image-picker",
+          {
+            "photosPermission": "The app accesses your photos to let you share them with your friends."
+          }
+        ]
+      ]
   }
 }
