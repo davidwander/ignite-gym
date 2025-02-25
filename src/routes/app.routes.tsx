@@ -14,7 +14,6 @@ import HomeSvg from "@assets/home.svg";
 import HistorySvg from "@assets/history.svg";
 import ProfileSvg from "@assets/profile.svg";
 
-// Definição dos tipos de rotas
 export type TabRoutes = {
   home: undefined;
   history: undefined;
@@ -26,7 +25,6 @@ export type StackRoutes = {
   Exercise: undefined;
 };
 
-// Corrigindo a exportação do tipo de navegação para `useNavigation`
 export type AppNavigatorRoutesProps = NavigationProp<StackRoutes>;
 
 const Tab = createBottomTabNavigator<TabRoutes>();
