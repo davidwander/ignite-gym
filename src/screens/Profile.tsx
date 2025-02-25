@@ -4,6 +4,7 @@ import { Center, VStack, Text, Heading } from "@gluestack-ui/themed";
 import * as ImagePiker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 
+import { ToastMessage } from "@components/ToastMessage";
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
 import { Input } from "@components/Input";
@@ -46,6 +47,14 @@ export function Profile() {
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
+
+      <ToastMessage 
+        id="1"
+        title="teste"
+        description="teste"
+        action="success"
+        onClose={() => {}}
+      />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
