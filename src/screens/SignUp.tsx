@@ -18,7 +18,7 @@ import { Button } from "@components/Button";
 
 export function SignUp() {
 
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
 
   const navigation = useNavigation();
 
@@ -26,7 +26,8 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp() {
+  function handleSignUp(data: any) {
+    console.log(data);
   }
 
   return (
@@ -103,13 +104,15 @@ export function SignUp() {
                     secureTextEntry
                     onChangeText={onChange}
                     value={value}
+                    onSubmitEditing={handleSubmit(handleSignUp)}
+                    returnKeyType="send"
                   />
                 )}
               />
 
             <Button 
               title="Criar e acessar"
-              onPress={handleSignUp} 
+              onPress={handleSubmit(handleSignUp)} 
             />
           </Center>
 
