@@ -28,11 +28,22 @@ type FormDataProps = {
 const signUpSchema = yup.object({
   name: yup.string().required("Informe seu nome"),
   email: yup.string().required("Informe seu e-mail").email("E-mail inválido"),
+  password: yup
+    .string()
+    .required("Informe sua senha")
+    .min(6, "A senha deve ter no mínimo 6 dígitos"),
+  password_confirm: yup
+      .string()
+      .required("Confirme a senha")
+      .oneOf([yup.ref("password"), ""], "As senhas não conferem"),
 })
 
 export function SignUp() {
-
-  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
+  const { 
+    control, 
+    handleSubmit, 
+    formState: { errors } 
+} = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema)
   });
 
@@ -109,6 +120,7 @@ export function SignUp() {
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.password?.message}
                 />
               )}
             />
@@ -124,6 +136,7 @@ export function SignUp() {
                     value={value}
                     onSubmitEditing={handleSubmit(handleSignUp)}
                     returnKeyType="send"
+                    errorMessage={errors.password_confirm?.message}
                   />
                 )}
               />
