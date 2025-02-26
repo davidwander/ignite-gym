@@ -20,12 +20,12 @@ type FormDataProps = {
   name: string;
   email: string;
   password: string;
-  confirm_password: string;
+  password_confirm: string;
 }
 
 export function SignUp() {
 
-  const { control, handleSubmit } = useForm<FormDataProps>();
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>();
 
   const navigation = useNavigation();
 
@@ -33,8 +33,8 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp({name, email, password, confirm_password}: FormDataProps) {
-    console.log({ name, email, password, confirm_password });
+  function handleSignUp({name, email, password, password_confirm}: FormDataProps) {
+    console.log({ name, email, password, password_confirm });
   }
 
   return (
@@ -67,6 +67,9 @@ export function SignUp() {
             <Controller 
               control={control}
               name="name"
+              rules={{
+                required: "Informe o seu nome"
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input 
                   placeholder="Nome" 
@@ -75,10 +78,21 @@ export function SignUp() {
                 />
               )}
             />
+
+            {errors.name?.message && (
+              <Text color="$white">{errors.name?.message}</Text>
+            )}
             
             <Controller 
               control={control}
               name="email"
+              rules={{
+                required: "Informe seu e-mail",
+                pattern: {
+                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i,
+                  message: "E-mail inválido"
+                }
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input 
                   placeholder="E-mail" 
@@ -88,6 +102,10 @@ export function SignUp() {
                 />
               )}
             />
+
+            <Text color="$white">
+              {errors.email?.message}
+            </Text>
 
             <Controller 
               control={control}
