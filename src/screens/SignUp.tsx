@@ -10,6 +10,8 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { api } from "@services/api";
+
 import { useNavigation } from "@react-navigation/native";
 
 import BackgroundImg from "@assets/background.png";
@@ -54,16 +56,9 @@ export function SignUp() {
   }
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
-    const response = await fetch('http://192.168.3.7:3333/users', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password })
-    })
-      const data = await response.json();
-      console.log(data);
+    
+    const response = await api.post('/users', { name, email, password });
+    console.log(response.data);
   }
 
   return (
