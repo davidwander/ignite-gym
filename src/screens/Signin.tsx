@@ -5,7 +5,9 @@ import {
   Center, 
   Text, 
   Heading, 
-  ScrollView } 
+  ScrollView,
+  useToast, 
+  Box } 
   from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 
@@ -18,6 +20,7 @@ import Logo from "@assets/logo.svg";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { AppError } from "@utils/AppError";
 
 type FormData = {
   email: string;
@@ -26,9 +29,9 @@ type FormData = {
 
 export function SignIn() {
   const { signIn } = useAuth();
-
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
-
+  const toast = useToast();
+  
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   function handleNewAccount() {
@@ -36,7 +39,21 @@ export function SignIn() {
   }
 
   async function handleSignIn({ email, password }: FormData) {
-    await signIn(email, password);
+    try {
+      await signIn(email, password);   
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError ? error.message : "Não foi possível acessar. Tente novamente mais tarde."
+      toast.show({
+        render: () => (
+          <Box bg="$red500" mt="$16" px="$4" py="$4" rounded="$sm">
+            <Text color="$white">{title}</Text>
+          </Box>
+        ),
+        placement: "top"
+      })
+    }
   }
 
   return (
