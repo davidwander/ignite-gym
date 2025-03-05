@@ -1,3 +1,4 @@
+import  { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { 
   VStack,
@@ -28,6 +29,8 @@ type FormData = {
 }
 
 export function SignIn() {
+  const [isloading, setIsLoading] = useState(false);
+
   const { signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
@@ -40,11 +43,15 @@ export function SignIn() {
 
   async function handleSignIn({ email, password }: FormData) {
     try {
+      setIsLoading(true);
       await signIn(email, password);   
     } catch (error) {
       const isAppError = error instanceof AppError;
 
       const title = isAppError ? error.message : "Não foi possível acessar. Tente novamente mais tarde."
+
+      setIsLoading(false);
+
       toast.show({
         render: () => (
           <Box bg="$red500" mt="$16" px="$4" py="$4" rounded="$sm">
@@ -115,6 +122,7 @@ export function SignIn() {
             <Button 
               title="Acessar" 
               onPress={handleSubmit(handleSignIn)}
+              isLoading={isloading}
             />
           </Center>
 
