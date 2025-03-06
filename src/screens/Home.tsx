@@ -1,25 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FlatList } from "react-native"
 import { Heading, HStack, VStack, Text, useToast, Box } from "@gluestack-ui/themed";
 
 import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
 
 import { HomeHeader } from "@components/HomeHeader";
 import { Group } from "@components/Group";
 import { ExerciseCard } from "@components/ExerciseCard"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { AppError } from "@utils/AppError";
 
 
 export function Home() {
-  const [exercises, setExercises] = useState([
-    "Puxada frontal", 
-    "Remada curvada", 
-    "Remada unilateral", 
-    "Levantamento terra",
-  ]);
   const [groups, setGroups] = useState<string[]>([]);
+  const [exercises, setExercises] = useState([]);
   const [groupSelected, setGroupSelected] = useState("Costas");
 
   const toast = useToast()
@@ -50,9 +45,33 @@ export function Home() {
     }
   }
 
+  async function fetchExercisesByGroup() {
+    try {
+      const response = await api.get(`/exercises/bygroup/${groupSelected}`)
+      console.log(response.data)
+      
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : "Erro ao buscar execícios";
+      
+      toast.show({
+        render: () => (
+          <Box bg="$red500" mt="$16" px="$4" py="$4" rounded="$sm">
+            <Text color="$white">{title}</Text>
+          </Box>
+        ),
+        placement: "top"
+      }) 
+    }
+  }
+
   useEffect(() => {
     fetchGroups()
-  }, [])
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    fetchExercisesByGroup();
+  }, [groupSelected]));
 
   return (
     <VStack flex={1}>
