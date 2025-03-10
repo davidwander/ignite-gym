@@ -21,8 +21,9 @@ export type TabRoutes = {
 };
 
 export type StackRoutes = {
-  Tabs: undefined;
+  Tabs: { screen?: keyof TabRoutes } | undefined;
   Exercise: { exerciseId: string };
+  history: undefined;
 };
 
 export type AppNavigatorRoutesProps = NavigationProp<StackRoutes>;
