@@ -22,7 +22,7 @@ export type TabRoutes = {
 
 export type StackRoutes = {
   Tabs: undefined;
-  Exercise: undefined;
+  Exercise: { exerciseId: string };
 };
 
 export type AppNavigatorRoutesProps = NavigationProp<StackRoutes>;
