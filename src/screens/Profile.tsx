@@ -1,8 +1,11 @@
 import { useState } from "react"
-import { Alert, ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import { Center, VStack, Text, Heading, useToast } from "@gluestack-ui/themed";
+import { Controller, useForm } from "react-hook-form";
 import * as ImagePiker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+
+import { useAuth } from "@hooks/useAuth";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
@@ -10,10 +13,25 @@ import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { ToastMessage } from "@components/ToastMessage";
 
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  old_password: string;
+  confirm_password: string;
+}
+
 export function Profile() {
   const [userPhoto, setUserPhoto] = useState("https://github.com/davidwander.png");
 
   const toast = useToast();
+  const { user } = useAuth();
+  const { control } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    }
+  });
 
   async function handleUserPhotoSelect() {
     try{
@@ -80,10 +98,31 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Center w="$full" gap="$4">
-            <Input placeholder="Nome" bg="$gray600"/>
-            <Input value="dwander161@gmail.com" bg="$gray600" isReadOnly/>
-          </Center>
+          <Controller 
+            control={control}
+            name="name"
+            render={({ field: { value, onChange } }) => (
+              <Input 
+                placeholder="Nome" 
+                bg="$gray600"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+
+          <Controller 
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input 
+                bg="$gray600" 
+                placeholder="Email"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
           <Heading
             alignSelf="flex-start"
