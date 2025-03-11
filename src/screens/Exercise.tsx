@@ -79,7 +79,6 @@ export function Exercise() {
 
       navigation.navigate("Tabs", { screen: "history" });
 
-
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : "Erro ao registrar exercício";
