@@ -15,14 +15,21 @@ import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { ToastMessage } from "@components/ToastMessage";
 
-// Transformação: converte string vazia para undefined
 const transformEmptyToUndefined = (value: any) =>
   value === "" ? undefined : value;
 
 const profileSchema = yup.object({
-  name: yup.string().required("Informe o nome"),
-  email: yup.string().email("E-mail inválido").required("O e-mail é obrigatório"),
-  old_password: yup.string().transform(transformEmptyToUndefined).notRequired(),
+  name: yup
+    .string()
+    .required("Informe o nome"),
+  email: yup
+    .string()
+    .email("E-mail inválido")
+    .required("O e-mail é obrigatório"),
+  old_password: yup
+    .string()
+    .transform(transformEmptyToUndefined)
+    .notRequired(),
   password: yup
     .string()
     .min(6, "A senha deve ter pelo menos 6 caracteres")
@@ -31,24 +38,16 @@ const profileSchema = yup.object({
   confirm_password: yup
     .string()
     .transform(transformEmptyToUndefined)
-    .notRequired()
     .when("password", {
       is: (password: any) => !!password,
       then: (schema) =>
-        schema.test(
-          "passwords-match",
-          "As senhas não coincidem",
-          function (value) {
-            // Se o usuário não digitou nada em confirm_password, não exibe erro.
-            if (value === undefined) return true;
-            return value === this.parent.password;
-          }
-        ),
+        schema
+          .required("Confirme a nova senha")
+          .oneOf([yup.ref("password")], "As senhas não coincidem"),
       otherwise: (schema) => schema.notRequired(),
     }),
-});
+  });
 
-// Fazendo o yup inferir o tipo para evitar conflitos
 export type FormDataProps = yup.InferType<typeof profileSchema>;
 
 export function Profile() {
