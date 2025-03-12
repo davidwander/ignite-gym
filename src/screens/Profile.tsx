@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
-import { Center, VStack, Text, Heading, useToast } from "@gluestack-ui/themed";
+import { Center, VStack, Text, Heading, useToast, Box } from "@gluestack-ui/themed";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import * as yup from "yup";
+
+import { api } from "@services/api";
 
 import { useAuth } from "@hooks/useAuth";
 
@@ -14,6 +16,7 @@ import { UserPhoto } from "@components/UserPhoto";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { ToastMessage } from "@components/ToastMessage";
+import { AppError } from "@utils/AppError";
 
 const transformEmptyToUndefined = (value: any) =>
   value === "" ? undefined : value;
@@ -51,6 +54,7 @@ const profileSchema = yup.object({
 export type FormDataProps = yup.InferType<typeof profileSchema>;
 
 export function Profile() {
+  const [isUpdating, setUpdating] = useState(false)
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/davidwander.png"
   );
@@ -111,7 +115,38 @@ export function Profile() {
   }
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log(data);
+    try {
+      setUpdating(true);
+
+      await api.put("/users", data);
+
+      toast.show({
+        render: () => (
+          <Box bg="$green500" mt="$16" px="$4" py="$4" rounded="$sm">
+            <Text color="$white">
+              Perfil atualizado com sucesso!
+            </Text>
+          </Box>
+        ),
+        placement: "top"
+      });
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : "Não foi possível atualizar os   dados. Tente novamente mais tarde";
+
+      toast.show({
+        render: () => (
+          <Box bg="$red500" mt='$16' px="$4" py="$4" rounded="$sm">
+            <Text color="$white">
+              {title}
+            </Text>
+          </Box>
+        )
+      })
+    } finally{
+      setUpdating(false);
+    }
   }
 
   return (
@@ -218,6 +253,7 @@ export function Profile() {
             title="Atualizar"
             mt="$4"
             onPress={handleSubmit(handleProfileUpdate)}
+            isLoading={isUpdating}
           />
         </Center>
       </ScrollView>
