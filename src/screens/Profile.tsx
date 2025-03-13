@@ -82,23 +82,23 @@ export function Profile() {
         aspect: [4, 4],
         allowsEditing: true,
       });
-
-      if (photoSelected.canceled) {
+  
+      if (photoSelected.canceled || !photoSelected.assets?.length) {
         return;
       }
-
-      const photoURI = photoSelected.assets?.[0]?.uri;
-
+  
+      const photoURI = photoSelected.assets[0].uri;
+      const fileType = photoSelected.assets[0].type;
+  
       if (photoURI) {
-        const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
-          size: number
-        }
-
-        if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+        const photoInfo = await FileSystem.getInfoAsync(photoURI);
+  
+        if (photoInfo.exists && photoInfo.size && 
+          photoInfo.size / 1024 / 1024 > 5) {
           return toast.show({
             placement: "top",
             render: ({ id }) => (
-              <ToastMessage 
+              <ToastMessage
                 id={id}
                 action="error"
                 title="Imagem muito grande!"
@@ -106,12 +106,21 @@ export function Profile() {
                 onClose={() => toast.close(id)}
               />
             ),
-          }) 
+          });
         }
-        setUserPhoto(photoURI)
+  
+        const fileExtension = photoURI.split('.').pop();
+  
+        const photoFile = {
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri: photoURI,
+          type: `${fileType}/${fileExtension}`,
+        };
+  
+        console.log(photoFile);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
