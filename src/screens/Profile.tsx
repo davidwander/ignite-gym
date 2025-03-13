@@ -60,7 +60,8 @@ export function Profile() {
   );
 
   const toast = useToast();
-  const { user } = useAuth() || { user: { name: "", email: "" } };
+  const { user, updateUserProfile } = useAuth() || { 
+    user: { name: "", email: "" } };
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     defaultValues: {
@@ -118,7 +119,12 @@ export function Profile() {
     try {
       setUpdating(true);
 
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
       await api.put("/users", data);
+
+      await updateUserProfile(userUpdated);
 
       toast.show({
         render: () => (
