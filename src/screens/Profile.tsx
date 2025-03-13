@@ -139,7 +139,7 @@ export function Profile() {
 
     } catch (error) {
       const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível atualizar os   dados. Tente novamente mais tarde";
+      const title = isAppError ? error.message : "Não foi possível atualizar os  dados. Tente novamente mais tarde";
 
       toast.show({
         render: () => (
@@ -148,7 +148,8 @@ export function Profile() {
               {title}
             </Text>
           </Box>
-        )
+        ),
+        placement: "top"
       })
     } finally{
       setUpdating(false);
