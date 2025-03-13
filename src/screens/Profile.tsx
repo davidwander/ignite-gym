@@ -54,7 +54,8 @@ const profileSchema = yup.object({
 export type FormDataProps = yup.InferType<typeof profileSchema>;
 
 export function Profile() {
-  const [isUpdating, setUpdating] = useState(false)
+  const [isUpdating, setUpdating] = useState(false);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/davidwander.png"
   );
@@ -75,6 +76,8 @@ export function Profile() {
   });
 
   async function handleUserPhotoSelect() {
+    setPhotoIsLoading(true);
+
     try {
       const photoSelected = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -115,12 +118,33 @@ export function Profile() {
           name: `${user.name}.${fileExtension}`.toLowerCase(),
           uri: photoURI,
           type: `${fileType}/${fileExtension}`,
-        };
+        } as any;
   
-        console.log(photoFile);
+        const userPhotoUploadForm = new FormData();
+        userPhotoUploadForm.append("avatar", photoFile);
+
+        await api.patch("/users/avatar", userPhotoUploadForm, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        toast.show({
+          render: () => (
+            <Box bg="$green500" mt="$16" px="$4" py="$4" rounded="$sm">
+              <Text color="$white">
+                Foto de perfil atualizada com sucesso!
+              </Text>
+            </Box>
+          ),
+          placement: "top"
+        })
+
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
     }
   }
 
