@@ -11,6 +11,8 @@ import { api } from "@services/api";
 
 import { useAuth } from "@hooks/useAuth";
 
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
+
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
 import { Input } from "@components/Input";
@@ -56,9 +58,6 @@ export type FormDataProps = yup.InferType<typeof profileSchema>;
 export function Profile() {
   const [isUpdating, setUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    "https://github.com/davidwander.png"
-  );
 
   const toast = useToast();
   const { user, updateUserProfile } = useAuth() || { 
@@ -199,7 +198,14 @@ export function Profile() {
 
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
-          <UserPhoto source={{ uri: userPhoto }} alt="Foto do usuário" size="xl" />
+          <UserPhoto 
+            source={
+              user.avatar 
+                ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` } 
+                : defaultUserPhotoImg} 
+              alt="Foto do usuário"
+              size="xl"
+          />
 
           <TouchableOpacity onPress={handleUserPhotoSelect}>
             <Text
