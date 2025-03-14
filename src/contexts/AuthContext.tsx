@@ -12,12 +12,10 @@ export type AuthContextDataProps = {
   updateUserProfile: (userUpdated: UserDTO) => Promise<void>;
   signOut: () => Promise<void>;
   isLoadingUserStorageData: boolean;
-
 }
 
 type AuthContextProviderProps = {
   children: ReactNode;
-  
 }
 
 export const AuthContext = createContext<AuthContextDataProps>({} as AuthContextDataProps);
@@ -103,6 +101,14 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   useEffect(() => {
     LoadUserData();
   }, []);
+
+  useEffect(() => {
+    const subscribe = api.registerInterceptTokenManager(signOut);
+
+    return () => {
+      subscribe();
+    };
+  }, [signOut]);
 
   return (
     <AuthContext.Provider value={{ 
